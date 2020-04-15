@@ -1,0 +1,3 @@
+http://random-status-code.herokuapp.com
+https://www.twitch.tv
+https://golang.org
