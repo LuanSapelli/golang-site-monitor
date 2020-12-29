@@ -1,6 +1,11 @@
-# golang-site-monitor
-Projeto de estudo escrito em Go para realizar monitoramento de sites e gravação de logs.
+# Golang Site Monitor 🚀
 
-Programa para monitorar sites que são passados no arquivo "sites.txt".
-Ao iniciar o monitoramento, o programa cria um arquivo "log.txt" e grava o retorno http dos sites neste log,
-que pode ser visualizado em seguida.
+<p>
+Script to check the status code of the sites in the sites.txt file and write a log to the log.txt file
+</p>
+
+### Step by step
+
+1. Put website addresses in the `sites.txt` file
+2. Execute `go run main.go`, select the `Start Monitor` option in terminal and let it run for a while
+3. Stop the program, and check the new file `log.txt`, where the log of the monitored sites will be shown (you can see the log via terminal using the `Show Logs` command)

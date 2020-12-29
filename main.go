@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
-	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -18,12 +18,15 @@ const monitoringDelay = 5
 
 func main() {
 
-	introduction()
+	TerminalIntroduction()
 
 	for {
 		menuOptions()
 
-		command := commandInput()
+		command, err := commandInput()
+		if err != nil {
+			log.Printf("Invalid command - %v", err)
+		}
 
 		switch command {
 		case 1:
@@ -40,13 +43,12 @@ func main() {
 	}
 }
 
-func introduction() {
-	fmt.Println("")
+func TerminalIntroduction() {
 	name := "Luan Sapelli"
-	version := 1.1
-	fmt.Println("Hello", name, "| Type of name:", reflect.TypeOf(name))
-	fmt.Println("Program Version:", version, "| Type of version:", reflect.TypeOf(version))
-	fmt.Println("")
+	version := 1.0
+
+	fmt.Println("\n Hello", name)
+	fmt.Println("Program Version:", version)
 }
 
 func menuOptions() {
@@ -56,11 +58,13 @@ func menuOptions() {
 	fmt.Println("")
 }
 
-func commandInput() int {
+func commandInput() (int, error) {
 	var commandInput int
-	fmt.Scan(&commandInput)
-	fmt.Println("")
-	return commandInput
+	_, err := fmt.Scan(&commandInput)
+	if err != nil {
+		return 0, err
+	}
+	return commandInput, nil
 }
 
 func startMonitor() {
@@ -113,7 +117,7 @@ func siteArchive() []string {
 			break
 		}
 	}
-	archive.Close()
+	_ = archive.Close()
 
 	return sites
 }
@@ -122,13 +126,12 @@ func writeLog(site string, status bool) {
 	archive, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Printf("Error to open file - %v", err)
 	}
 
-	archive.WriteString(time.Now().Format("Mon 02/01/2006 15:04:05") + " - " + site + " - online:" + strconv.FormatBool(status) + "\n")
-	//https://golang.org/src/time/format.go
+	_, err = archive.WriteString(time.Now().Format("Mon 02/01/2006 15:04:05") + " - " + site + " - online:" + strconv.FormatBool(status) + "\n")
 
-	archive.Close()
+	_ = archive.Close()
 }
 
 func showLog() {
